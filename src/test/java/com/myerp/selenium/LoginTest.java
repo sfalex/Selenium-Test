@@ -1,4 +1,4 @@
-package myerp.login;
+package com.myerp.selenium;
 
 import com.thoughtworks.selenium.*;
 import org.junit.*;
