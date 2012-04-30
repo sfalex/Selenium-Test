@@ -10,7 +10,7 @@ public class LoginTest extends TestingBotTestCase {
             "hub.testingbot.com",
             4444,
             "firefox",
-            "http://www.myerp.com/");
+            "http://ec2-23-20-169-224.compute-1.amazonaws.com");
 
     this.selenium = selenium;
     selenium.start("version=10;platform=WINDOWS;screenrecorder=false");
@@ -20,7 +20,7 @@ public class LoginTest extends TestingBotTestCase {
   }
 
   public void testLogin() throws Exception {
-    this.selenium.open("https://pp.myerp.com/index.jsp?locale=en_US");
+    this.selenium.open("/login");
     assertEquals("Sign In | myERP.com", this.selenium.getTitle());
     this.selenium.type("//*[@id=\"userUsername\"]", "alex.myerp@gmail.com");
     this.selenium.fireEvent("//*[@id=\"userUsername\"]", "blur");
