@@ -5,7 +5,7 @@ import org.junit.*;
 import com.testingbot.*;
 
 public class LoginTest extends TestingBotTestCase {
-	@Before  
+	
 	public void setUp() throws Exception {
 		TestingBotSelenium selenium = new TestingBotSelenium(
             "hub.testingbot.com",
@@ -20,7 +20,7 @@ public class LoginTest extends TestingBotTestCase {
 		System.out.println("TestingBotSessionID=" + this.selenium.getEval("selenium.sessionId"));
 	}
 
-	@Test
+	
 	public void testLogin() throws Exception {
 		this.selenium.open("/login");
 		assertEquals("Sign In | myERP.com", this.selenium.getTitle());
@@ -32,7 +32,7 @@ public class LoginTest extends TestingBotTestCase {
     	this.selenium.waitForPageToLoad("30000");
 	}
 
-	@After
+	
 	public void tearDown() throws Exception {
 		this.selenium.stop();
 	}
