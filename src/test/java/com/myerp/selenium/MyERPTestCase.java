@@ -11,14 +11,15 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
 	@BeforeClass
 	public void setUp() throws Exception {
 		final boolean testingbot = "testingbot".equals(System.getProperty("tool"));
+		String website = System.getProperty("website");
+		website = (website == null) ? "https://pp.myerp.com" : website;
 
 		if (testingbot) {
 			selenium = new TestingBotSelenium(
 		            "hub.testingbot.com",
 		            4444,
 		            "firefox",
-			    //"http://ec2-23-20-169-224.compute-1.amazonaws.com");
-		            "https://pp.myerp.com");
+			    website);
 			selenium.start("version=10;platform=WINDOWS;screenrecorder=false");
     
 		    	// print sessionID in output so that our Jenkins plugin maps the sessionID to videos/screenshots
@@ -28,8 +29,7 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
 			"localhost",
 			4444, 
 			"*firefox", 
-			//"http://ec2-23-20-169-224.compute-1.amazonaws.com");
-			"https://pp.myerp.com");
+			website);
 			selenium.start();
 		}
 	}
