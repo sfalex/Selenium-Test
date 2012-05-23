@@ -43,14 +43,20 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
 		long time = time();
 		selenium.open("/account-creation?locale=en_US&email=test"+time+"@myerp.com&company_name=myerp&name=Tester&password=qwerty&openid_provider=none&remote_addr=127.0.0.1&openid_claimedId&billing");
 		selenium.waitForPageToLoad("5000");
-		Thread.sleep(10000);
 		selenium.open(page);
 		assertTrue(selenium.getTitle().endsWith("myERP.com"));
-		selenium.type("//*[@id=\"userUsername\"]", "test"+time+"@myerp.com");
-		selenium.fireEvent("//*[@id=\"userUsername\"]", "blur");
-		selenium.type("//*[@id=\"userPassword\"]", "qwerty");
-		selenium.fireEvent("//*[@id=\"userPassword\"]", "blur");
-		selenium.click("css=input[type=\"image\"]");
+		for (int i = 0; i < 30; i++) {
+			if (selenium.isElementPresent("//*[@id=\"userUsername\"]")) {
+				selenium.type("//*[@id=\"userUsername\"]", "test"+time+"@myerp.com");
+				selenium.fireEvent("//*[@id=\"userUsername\"]", "blur");
+				selenium.type("//*[@id=\"userPassword\"]", "qwerty");
+				selenium.fireEvent("//*[@id=\"userPassword\"]", "blur");
+				selenium.click("css=input[type=\"image\"]");
+				}
+			else {
+				Thread.sleep(1000);
+				}
+			}
 		selenium.waitForPageToLoad("30000");
 	}
 
