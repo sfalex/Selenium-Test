@@ -43,7 +43,7 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
 		long time = time();
 		selenium.open("/account-creation?locale=en_US&email=test"+time+"@myerp.com&company_name=myerp&name=Tester&password=qwerty&openid_provider=none&remote_addr=127.0.0.1&openid_claimedId&billing");
 		selenium.waitForPageToLoad("5000");
-		Thread.sleep(2000);
+		Thread.sleep(10000);
 		selenium.open(page);
 		assertTrue(selenium.getTitle().endsWith("myERP.com"));
 		selenium.type("//*[@id=\"userUsername\"]", "test"+time+"@myerp.com");
