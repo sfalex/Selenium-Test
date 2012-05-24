@@ -51,13 +51,13 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
 				selenium.fireEvent("//*[@id=\"userUsername\"]", "blur");
 				selenium.type("//*[@id=\"userPassword\"]", "qwerty");
 				selenium.fireEvent("//*[@id=\"userPassword\"]", "blur");
-				selenium.click("css=input[type=\"image\"]");
+				selenium.click("//body/div/div[2]/form/div[3]/input");
+				selenium.waitForPageToLoad("20000");
 				}
 			else {
-				Thread.sleep(1000);
+				break;
 				}
 			}
-		selenium.waitForPageToLoad("30000");
 	}
 
 	/** This function permits to fill the CB field to choose a plan. */
