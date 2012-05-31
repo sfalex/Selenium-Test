@@ -3,6 +3,8 @@ package com.myerp.selenium;
 import org.junit.*;
 import com.thoughtworks.selenium.*;
 import com.testingbot.*;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 @SuppressWarnings("deprecation")
@@ -38,6 +40,9 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
 		return t;
 		}
 
+	public double truncate2Decimals(double input) {
+		return new BigDecimal(input).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+	}
 	
 	/** This function permits to do mouse Over, Down and Up. */
 	public void mouse(String locator) throws Exception {

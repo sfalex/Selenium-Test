@@ -1,7 +1,8 @@
 package com.myerp.selenium;
 
-import org.junit.*;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import org.junit.Test;
 
 @SuppressWarnings("deprecation")
 
@@ -111,7 +112,7 @@ public class PaymentTest extends MyERPTestCase {
 			// Check that the Number Card field for the CB is disabled.
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[2]/input");
 			assertTrue(selenium.isElementPresent("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[2]/input[@disabled]"));
-			// Check the the Expiration date is disabled.
+			// Check the the Expiratiodecn date is disabled.
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select");
 			assertTrue(selenium.isElementPresent("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select[@disabled]"));
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select[2]");
@@ -132,10 +133,10 @@ public class PaymentTest extends MyERPTestCase {
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[2]/input");
 			assertFalse(selenium.isElementPresent("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[2]/input[@disabled]"));
 			assertEquals(selenium.getText("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[2]/input"),"");
-			// Check that the month of expiration for the CB is enabled.
+			// Check that the month of expiratiodecn for the CB is enabled.
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select");
 			assertFalse(selenium.isElementPresent("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select[@disabled]"));
-			// Check that the year of expiration for the CB is enabled.
+			// Check that the year of expiratiodecn for the CB is enabled.
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select[2]");
 			assertFalse(selenium.isElementPresent("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select[2][@disabled]"));
 			
@@ -149,7 +150,7 @@ public class PaymentTest extends MyERPTestCase {
 			// Check that the Number Card field for the CB is disabled.
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[2]/input");			
 			assertTrue(selenium.isElementPresent("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[2]/input[@disabled]"));
-			// Check the the Expiration date is disabled.
+			// Check the the Expiratiodecn date is disabled.
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select");
 			assertTrue(selenium.isElementPresent("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select[@disabled]"));
 			waitForElement("//div[@data-plan='"+plan[i]+"']/div[6]/div/div[2]/div/div[2]/div/span[3]/div[2]/select[2]");
@@ -162,20 +163,54 @@ public class PaymentTest extends MyERPTestCase {
 	public void testProrata() throws Exception {
 		login("/index.jsp#manage_subscription");
 		Thread.sleep(3000);
-		fillCB("team","alex","4111111111111111");
-		selenium.click("//div[@data-plan='team']//div[starts-with(@id, 'gwt-uid-')]//button");
-		waitForElement("//div[@data-plan='team']//div[starts-with(@id, 'gwt-uid-') and @style='display: none;']");
+		fillCB("plus","alex","4111111111111111");
+		selenium.click("//div[@data-plan='plus']//div[starts-with(@id, 'gwt-uid-')]//button");
+		waitForElement("//div[@data-plan='plus']//div[starts-with(@id, 'gwt-uid-') and @style='display: none;']");
 		selenium.click("//body/div/div/div/div[3]/div/div[2]/div/div/button");
-		selenium.open("/index.jsp#manage_subscription");
-		selenium.waitForPageToLoad("30000");
-		Thread.sleep(8000);
+		
+		
+		
 		Calendar cal = Calendar.getInstance();
-		int daysinmonth = cal.getActualMaximum(((new Date()).getDay()));
-		int remainingdays = daysinmonth - ((new Date()).getDay());
-		int price = Integer.parseInt((selenium.getText("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[4]/div/span")).substring(1));
-		int ratio = price*remainingdays/daysinmonth;
-		System.out.println(ratio);
-		System.out.println(daysinmonth);System.out.println(remainingdays);System.out.println(price);
+		double daysinmonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		double remainingdays = daysinmonth - cal.get(Calendar.DAY_OF_MONTH);
+		
+		
+		String plan[] = {"plus", "team", "unlimited"};
+		
+		for (int i = 0; i<3; i++) {
+		
+		selenium.open("#manage_subscription");
+		Thread.sleep(5000);
+		selenium.waitForPageToLoad("30000");
+		Thread.sleep(3000);
+		
+		double priceplan = Integer.parseInt((selenium.getText("//div[@data-plan='"+plan[i]+"']/div[4]/div/span")).substring(1));
+		double pricedisplayed = Double.parseDouble((selenium.getText("//div[@data-plan='"+plan[i]+"']/div[6]/div/div/div[3]/span[2]")).substring(1));
+		
+		double alreadypaid;
+		if (remainingdays == 0) {
+			alreadypaid = 0;
+		}
+		else {
+			alreadypaid = Double.parseDouble((selenium.getText("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div/div[3]/div/div[2]")).substring(1,6));
+		}
+		
+		double ratio = (remainingdays/daysinmonth);
+		double ratiodec = truncate2Decimals(ratio);
+		
+		double newpriceplan = ratiodec*priceplan;
+		double newpriceplandec = truncate2Decimals(newpriceplan);
+		
+		double pricetopay = newpriceplandec - alreadypaid;
+		
+		
+		if (remainingdays == 0) {
+			assertEquals(pricedisplayed,priceplan);
+		}
+		else {
+			assertEquals(pricedisplayed,pricetopay);
+		}
+		}
 	}
 	
 	@Test 
@@ -199,8 +234,6 @@ public class PaymentTest extends MyERPTestCase {
 				long time = time();	
 				Thread.sleep(3000);	
 				selenium.click("//body/div/div/div/div[3]/div/div/div/div/div/div[3]/button");
-				//selenium.mouseDown("//body/div/div/div/div[3]/div/div/div/div/div/div[3]/button");
-				//selenium.mouseUp("//body/div/div/div/div[3]/div/div/div/div/div/div[3]/button");
 				Thread.sleep(1000);
 				selenium.type("//body/div/div/div/div[3]/div/div/div/div/div/div[4]/div/div[1]/input","Alex"+time+"");
 				selenium.type("//body/div/div/div/div[3]/div/div/div/div/div/div[4]/div/div[2]/input","alex"+time+"@gmail.com");
@@ -243,4 +276,85 @@ public class PaymentTest extends MyERPTestCase {
 				Thread.sleep(1000);	
 				}
 		}	
+		
+		//This test allows to check if the "close" button is always available for all plan in the CB information field
+		public void testCloseButtonAlwaysAvailable () throws Exception {
+		// Open unlimited plan box
+			login("/index.jsp?#manage_subscription");
+			fillCB("unlimited", "John", "4111111111111111" );
+			selenium.click("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div/div[6]/a");
+			assertTrue(selenium.isElementPresent("//div[@data-plan=\"unlimited\"]//div[@style=\"display: none;\"]"));
+		// Open team plan box
+			fillCB("team", "John", "4111111111111111" );
+			selenium.click("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[6]/a");
+			assertTrue(selenium.isElementPresent("//div[@data-plan=\"team\"]//div[@style=\"display: none;\"]"));
+		// Open plus plan box
+			fillCB("plus", "John", "4111111111111111" );
+			selenium.click("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[3]/div[6]/a");
+			assertTrue(selenium.isElementPresent("//div[@data-plan=\"plus\"]//div[@style=\"display: none;\"]"));
+		}
+	//This test allows to check if the "done" button is always available in the "Manage subscription" section"
+		public void testDoneButtonAlwaysAvailable () throws Exception {
+		// Subscribe for an unlimited plan
+			login("/index.jsp?#manage_subscription");
+			Thread.sleep(1000);
+			fillCB("unlimited", "John", "4111111111111111" );
+			Thread.sleep(1000);
+			selenium.click("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div/div[6]/div[2]/button");
+			waitForElement("//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[6]/div[3]/div/span[2]");
+			Thread.sleep(3000);
+			selenium.click("//div[@id=\"contentRootPanel\"]/div/div[2]/div/div/button");
+			Thread.sleep(500);
+			selenium.open("#manage_subscription");
+			Thread.sleep(5000);
+			
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div[2]/div/div/button"));
+		// Open team plan box
+			selenium.click("//div[@data-plan=\"team\"]//button");
+			Thread.sleep(1000);
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div[2]/div/div/button"));
+		// Open plus plan box
+			selenium.click("//div[@data-plan=\"plus\"]//button");
+			Thread.sleep(1000);
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div[2]/div/div/button"));
+		// Open free plan box
+			selenium.click("//div[@data-plan=\"free\"]//button");
+			Thread.sleep(1000);
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div[2]/div/div/button"));
+		// Open "payment" tab
+			mouse("//body/div/div/div/div[3]/div/div/div/div/div/div/div[2]");
+			waitForElement("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div/div");
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div[2]/div/div/button"));
+		// Open "history" tab
+			mouse("//body/div/div/div/div[3]/div/div/div/div/div/div/div[3]");
+			waitForElement("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]");
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div[2]/div/div/button"));
+		}	
+	
+	//This test allows to check if the situation summary banner is always available in the "Manage subscription" section
+		public void testBlueBannerAlwaysPresent () throws Exception {
+		// Subscribe for an unlimited plan
+			login("/index.jsp?#manage_subscription");
+			Thread.sleep(1000);
+			fillCB("unlimited", "John", "4111111111111111" );
+			Thread.sleep(1000);
+			selenium.click("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div/div[6]/div[2]/button");
+			waitForElement("//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[6]/div[3]/div/span[2]");
+			Thread.sleep(3000);
+			selenium.click("//div[@id=\"contentRootPanel\"]/div/div[2]/div/div/button");
+			Thread.sleep(1000);
+			selenium.open("#manage_subscription");
+			Thread.sleep(5000);
+		// Check if it is displayed in the "plans" tab
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div"));
+			Thread.sleep(1000);
+		// Check if it is displayed in the "payment" tab
+			mouse("//body/div/div/div/div[3]/div/div/div/div/div/div/div[2]");
+			Thread.sleep(1000);
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div"));
+		// Check if it is displayed in the "history" tab
+			mouse("//body/div/div/div/div[3]/div/div/div/div/div/div/div[3]");
+			Thread.sleep(1000);
+			assertTrue(selenium.isElementPresent("//body/div/div/div/div[3]/div/div/div/div/div/div[2]/div[2]/div/div"));
+		}
 }
