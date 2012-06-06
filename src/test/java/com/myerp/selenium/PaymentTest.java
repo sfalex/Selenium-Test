@@ -358,13 +358,13 @@ public class PaymentTest extends MyERPTestCase {
 		}
 		
 	// This test checks the prorata when a customer is moving to another plan.
-	    @Test
+		@Test
 	    public void testProrata() throws Exception {
 	        login("/index.jsp#manage_subscription");
 	        Thread.sleep(3000);
 	        fillCB("plus","alex","4111111111111111");
-	        selenium.click(confirmPlusPlanButton);
-	        waitForElement(Processing);
+	        selenium.click("//div[@data-plan='plus']//div[starts-with(@id, 'gwt-uid-')]//button");
+	        waitForElement("//div[@data-plan='plus']//div[starts-with(@id, 'gwt-uid-') and @style='display: none;']");
 	        selenium.click(DoneButton);
 	       
 	        Calendar cal = Calendar.getInstance();
@@ -378,15 +378,17 @@ public class PaymentTest extends MyERPTestCase {
 	        double alreadypaid = 0;
 
 	        for (int i = 0; i<2; i++) {
+	        String OptionPlan = "//div[@data-plan='"+plan[i]+"']/";
+	        	
 	        selenium.open("#manage_subscription");
 	        selenium.waitForPageToLoad("30000");
 	        Thread.sleep(8000);
-	        waitForElement("//div[@data-plan='"+plan[i]+"']//button");
-	        selenium.click("//div[@data-plan='"+plan[i]+"']//button");
+	        waitForElement(OptionPlan+"/button");
+	        selenium.click(OptionPlan+"/button");
 	        Thread.sleep(5000);
 	       
-	        double priceplan = Integer.parseInt((selenium.getText("//div[@data-plan='"+plan[i]+"']/div[4]/div/span")).substring(1));
-	        double pricedisplayed = Double.parseDouble((selenium.getText("//div[@data-plan='"+plan[i]+"']/div[6]/div/div/div[2]/span")).substring(1));
+	        double priceplan = Integer.parseInt((selenium.getText(OptionPlan+"div[4]/div/span")).substring(1));
+	        double pricedisplayed = Double.parseDouble((selenium.getText(OptionPlan+"div[6]/div/div/div[2]/span")).substring(1));
 	       
 	       
 	        if (remainingdays == 0) {
@@ -394,14 +396,14 @@ public class PaymentTest extends MyERPTestCase {
 	        }
 	        else {
 	            Thread.sleep(5000);
-	            alreadypaid = alreadypaid + Double.parseDouble((selenium.getText("//div[@id='contentRootPanel']/div/div/div/div/div/div[2]/div[2]/div/div/div[3]/div/div[@data-timestamp]")).substring(1,6));
+	            alreadypaid = round2Decimals(alreadypaid + Double.parseDouble((selenium.getText(DisplayedPlan+"div[3]/div/div[@data-timestamp]")).substring(1,6)));
 	        }
 	       
 	       
 	        double newpriceplan = ratiodec*priceplan;
 	        double newpriceplandec = round2Decimals(newpriceplan);
 	       
-	        double pricetopay = newpriceplandec - alreadypaid;
+	        double pricetopay = round2Decimals(newpriceplandec - alreadypaid);
 	               
 	        if (remainingdays == 0) {
 	            assertEquals(priceplan,pricedisplayed);
@@ -409,9 +411,10 @@ public class PaymentTest extends MyERPTestCase {
 	        else {
 	            assertEquals(pricetopay,pricedisplayed);
 	        }
-	        selenium.click("//div[@data-plan='"+plan[i]+"']//div[starts-with(@id, 'gwt-uid-')]//button");
-	        waitForElement("//div[@data-plan='"+plan[i]+"']//div[starts-with(@id, 'gwt-uid-') and @style='display: none;']");
-	        selenium.click("//div[@id='contentRootPanel']/div/div[2]/div/div/button");
+	        selenium.click(OptionPlan+"/div[starts-with(@id, 'gwt-uid-')]//button");
+	        Thread.sleep(2000);
+	        waitForElement(OptionPlan+"/div[starts-with(@id, 'gwt-uid-') and @style='display: none;']");
+	        selenium.click(DoneButton);
 	        }
 	    }
 }
