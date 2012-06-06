@@ -291,10 +291,13 @@ public class PaymentTest extends MyERPTestCase {
 			assertTrue(selenium.isElementPresent(DisplayedPlan));
 			Thread.sleep(1000);
 		// Check if it is displayed in the "payment" tab
-			mouse("//div[@id='contentRootPanel']/div/div/div/div/div/div/div[2]");
+			waitForElement("//div[@id='contentRootPanel']/div/div/div/div/div/div/div[2]");
+			assertEquals(selenium.getAlert(), "0 ");
+			mouse("//div[@id='contentRootPanel']/div/div/div/div/div/div/div[2]/");
 			Thread.sleep(1000);
 			assertTrue(selenium.isElementPresent(DisplayedPlan));
 		// Check if it is displayed in the "history" tab
+			waitForElement("//div[@id='contentRootPanel']/div/div/div/div/div/div/div[3]");
 			mouse("//div[@id='contentRootPanel']/div/div/div/div/div/div/div[3]");
 			Thread.sleep(1000);
 			assertTrue(selenium.isElementPresent(DisplayedPlan));
