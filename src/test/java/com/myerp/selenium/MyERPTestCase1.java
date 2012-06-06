@@ -6,7 +6,7 @@ import com.testingbot.*;
 import java.util.*;
 
 @SuppressWarnings("deprecation")
-public abstract class MyERPTestCase extends SeleneseTestCase {
+public abstract class MyERPTestCase1 extends SeleneseTestCase {
 
 	protected Selenium selenium;
 	
@@ -30,6 +30,7 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
 		}
 
 	}
+	
 	
 	/** This function permits to give the date in millisecond in order to create a new account for every test.*/
 	public long time() {
@@ -112,15 +113,13 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
         selenium.open("#project/new");
         waitForElement("//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div/div/div/div/div/div[2]/input");
     // Name :
-        selenium.type("//div[@data-id=\"v192168001112_1308844562694_404\"]/div[2]/input", "Project 1");
-        selenium.fireEvent("//div[@data-id=\"v192168001112_1308844562694_404\"]/div[2]/input", "blur");
-        Thread.sleep(1000);
+        selenium.type("//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div/div/div/div/div/div[2]/input", "Project 1");
+        selenium.fireEvent("//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div/div/div/div/div/div[2]/input", "blur");
     // Description :
-        selenium.type("//div[@data-id=\"v192168001112_1308844670776_425\"]//textarea[@class=\"gwt-TextArea\"]", "This is project 1");
-        selenium.fireEvent("//div[@data-id=\"v192168001112_1308844670776_425\"]//textarea[@class=\"gwt-TextArea\"]", "blur");
-        Thread.sleep(1000);
+        selenium.type("//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/textarea", "This is project 1");
+        selenium.fireEvent("//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/textarea", "blur");
     // Record and exit :
-        selenium.click(DoneButton);
+        selenium.click("//div[@id=\"contentRootPanel\"]/div/div[2]/div/div/button");
         Thread.sleep(1000);
 
     }
@@ -137,13 +136,14 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
         selenium.type("//*[@data-id=\"v192168000209_1306417487476_1058\"]//textarea[@class=\"gwt-TextArea\"]", "This is task 1");
         selenium.fireEvent("//*[@data-id=\"v192168000209_1306417487476_1058\"]//textarea[@class=\"gwt-TextArea\"]", "blur");
     // Record and exit:
-        selenium.click(DoneButton);
+        selenium.click("//div[@id=\"contentRootPanel\"]/div/div[2]/div/div/button");
         Thread.sleep(1000);
     }
        
     
     /**This function permits create a new customer.*/
     public void NewCustomer() throws Exception {
+    	String DoneButton = ("//div[@id='contentRootPanel']/div/div[2]/div/div/button");
         selenium.open("#customer/new");
         waitForElement("//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div/div[2]");
     // Name of customer :
@@ -167,22 +167,11 @@ public abstract class MyERPTestCase extends SeleneseTestCase {
         selenium.type("//*[@data-id=\"v192168000022_1120724265750_1146\"]//input[@class=\"gwt-TextBox\"]", "www.myerp.com");
         selenium.fireEvent("//*[@data-id=\"v192168000022_1120724265750_1146\"]//input[@class=\"gwt-TextBox\"]", "blur");
         //Confirm creation
-        selenium.click(DoneButton);
+        selenium.click("//body/div/div/div/div[3]/div/div[2]/div/div/button");
         Thread.sleep(1000);
     }
 	
-    String AddUserButton = "//div[@id='contentRootPanel']/div/div/div/div/div/div[3]/button";
-	String DoneButton = "//div[@id='contentRootPanel']/div/div[2]/div/div/button";
-	String DisplayedPlan = "//div[@id='contentRootPanel']/div/div/div/div/div/div[2]/div[2]/div/div/";
-	String Processing = "//div[@id=\"contentRootPanel\"]/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/div[2]/div[6]/div[3]/div/span[2]";
-	String ChosenPlan = "//div[@id='contentRootPanel']/div/div/div/div/div/div[2]/div[2]/div/div[2]/div/";
-	String confirmPlusPlanButton = ChosenPlan+"div[3]/div[6]/div[2]/button";
-	String PaymentTab = "//div[@id='contentRootPanel']/div/div/div/div/div/div/div[2]";
-	String HistoryTab = "//div[@id='contentRootPanel']/div/div/div/div/div/div/div[3]";
-	String UserInfoField = "//div[@id='contentRootPanel']/div/div/div/div/div/div[4]/div/";
-	String MainPanel = "//div[@id=\"contentRootPanel\"]/div/div/div/div/div/";
-	String ConfirmDelete = "//tr[@class=\"dialogMiddle\"]/td[2]/div/div/div[2]/button";
-	
+    
 	@AfterClass
 	public void tearDown() throws Exception {
 		selenium.stop();
